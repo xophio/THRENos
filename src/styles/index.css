@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/*
+ * ORBIT OS design system — Swiss / International Typographic Style.
+ *
+ * Palette: warm paper, charcoal ink, neutral greys and one restrained signal red.
+ * Everything is flat: 1px rules, square corners, no blur, no gradients, no shadows.
+ *
+ * Components never hard-code colors. They use the semantic utilities declared in @theme
+ * (bg-paper, text-ink, border-rule, bg-field, bg-sidebar, text-on-accent, accent-bg …)
+ * or the `white` ramp, which is remapped to the ink color so `text-white/60` means "muted ink".
+ */
+
+@theme {
+  --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --color-sidebar: var(--sidebar);
+  --color-field: var(--field);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --color-signal: var(--signal);
+  --color-on-accent: var(--on-accent);
+
+  /* Square by default. `data-corners="round"` softens them slightly. */
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+}
+
+/* ---------- Tokens: Paper (default) ---------- */
+:root {
+  --signal: #d62929;
+  --accent: #d62929;
+  --on-accent: #ffffff;
+
+  --paper: #f2f0e9;
+  --ink: #202020;
+  --surface: #ffffff;
+  --sidebar: #f2f0e9;
+  --field: #ffffff;
+  --rule: rgba(32, 32, 32, 0.3);
+  --rule-soft: rgba(32, 32, 32, 0.12);
+  --grey: #8c8a83;
+  --dot: #202020;
+  --color-white: #202020; /* ink: powers every text-white/*, bg-white/*, border-white/* utility */
+  color-scheme: light;
+}
+
+/* ---------- Tokens: Charcoal ---------- */
+:root[data-theme="dark"] {
+  --paper: #202020;
+  --ink: #f2f0e9;
+  --surface: #2a2a29;
+  --sidebar: #202020;
+  --field: #1a1a1a;
+  --rule: rgba(242, 240, 233, 0.3);
+  --rule-soft: rgba(242, 240, 233, 0.14);
+  --grey: #9a978f;
+  --dot: #f2f0e9;
+  --color-white: #f2f0e9;
+  color-scheme: dark;
+}
+
+/* Surfaces that stay charcoal in both themes (the terminal). */
+.dark-scope {
+  --paper: #202020;
+  --ink: #f2f0e9;
+  --surface: #202020;
+  --field: #1a1a1a;
+  --rule: rgba(242, 240, 233, 0.3);
+  --rule-soft: rgba(242, 240, 233, 0.14);
+  --color-white: #f2f0e9;
+  --signal: #ef4b3f;
+  background: #202020;
+  color: #f2f0e9;
+}
+
+:root[data-corners="round"] {
+  --radius-xs: 2px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-2xl: 8px;
+  --radius-3xl: 10px;
+}
+
+:root[data-animations="off"] *,
+:root[data-animations="off"] *::before,
+:root[data-animations="off"] *::after {
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+}
+
+/* ---------- Base ---------- */
+html, body, #root { height: 100%; margin: 0; overflow: hidden; }
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: -0.006em;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  background: var(--paper);
+  color: var(--ink);
+  user-select: none;
+}
+input, textarea { user-select: text; }
+.selectable { user-select: text; }
+::selection { background: var(--accent); color: var(--on-accent); }
+
+/* ---------- Components ---------- */
+/* In the components layer so Tailwind utilities can still override them. */
+@layer components {
+/* Window / menu / dialog frame: flat white sheet, one ink rule. */
+.panel { background: var(--surface); border: 1px solid var(--ink); border-radius: var(--radius-lg); }
+/* Square tile (desktop icons, widgets). */
+.tile { background: var(--paper); border: 1px solid var(--ink); border-radius: var(--radius-md); }
+
+/* Small uppercase label — the system's secondary typographic voice. */
+.kicker {
+  font-size: 10.5px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+/* Text field: hairline box, signal underline on focus. */
+.field {
+  background: var(--field);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.12s;
+}
+.field:focus { border-color: var(--ink); box-shadow: inset 0 -2px 0 var(--accent); }
+.field::placeholder { color: color-mix(in srgb, var(--ink) 45%, transparent); }
+
+/* Flat icon button: invert on hover. */
+.ibtn { border-radius: var(--radius-md); color: color-mix(in srgb, var(--ink) 80%, transparent); transition: background 0.1s, color 0.1s; }
+.ibtn:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+.ibtn:disabled { opacity: 0.3; }
+
+.hover-invert:hover, .hover-invert:hover * { background-color: var(--ink); color: var(--paper) !important; }
+.hover-invert:hover * { background-color: transparent; }
+
+.accent-bg { background: var(--accent); color: var(--on-accent); }
+.accent-text { color: var(--accent); }
+
+input[type="range"] { accent-color: var(--accent); height: 2px; }
+}
+
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--ink) 28%, transparent); }
+::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--ink) 50%, transparent); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Icons share one hairline weight. */
+.lucide { stroke-width: 1.5; }
