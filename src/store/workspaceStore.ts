@@ -72,7 +72,7 @@ export const useWorkspaces = create<WorkspaceState>()(
       setActive: (id) => set((s) => (s.workspaces.some((w) => w.id === id) ? { activeId: id } : s)),
     }),
     {
-      name: 'orbit-workspaces',
+      name: 'threnos-workspaces',
       version: 1,
       partialize: (s) => ({ workspaces: s.workspaces, activeId: s.activeId }),
       merge: (persisted, current) => ({ ...current, ...sanitize(persisted) }),

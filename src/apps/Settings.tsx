@@ -6,14 +6,18 @@ import { DisplayPage } from './settings/DisplayPage'
 import { TaskbarPage } from './settings/TaskbarPage'
 import { SoundPage } from './settings/SoundPage'
 import { AppsPage } from './settings/AppsPage'
+import { AccountsPage } from './settings/AccountsPage'
+import { StartupPage } from './settings/StartupPage'
 import { SystemPage } from './settings/SystemPage'
 
 const TABS = [
   { id: 'personalization', label: 'Personalization', page: PersonalizationPage },
+  { id: 'accounts', label: 'Accounts', page: AccountsPage },
   { id: 'display', label: 'Display', page: DisplayPage },
   { id: 'taskbar', label: 'Taskbar', page: TaskbarPage },
   { id: 'sound', label: 'Sound', page: SoundPage },
   { id: 'apps', label: 'Apps', page: AppsPage },
+  { id: 'startup', label: 'Lock & startup', page: StartupPage },
   { id: 'system', label: 'System', page: SystemPage },
 ] as const satisfies readonly { id: string; label: string; page: ComponentType }[]
 

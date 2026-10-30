@@ -31,7 +31,7 @@ export const useCustomWallpapers = create<WallpaperState>()(
       },
       remove: (id) => set((s) => ({ images: s.images.filter((i) => i.id !== id) })),
     }),
-    { name: 'orbit-wallpapers' },
+    { name: 'threnos-wallpapers' },
   ),
 )
 

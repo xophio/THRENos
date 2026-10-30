@@ -19,7 +19,7 @@ const bytes = (value: unknown) => new TextEncoder().encode(JSON.stringify(value)
 export const CATALOG: AppManifest[] = [
   // ---- System: always installed ----
   {
-    id: 'files', name: 'Files', kind: 'system', category: 'System', version: '1.0.0', developer: 'Orbit',
+    id: 'files', name: 'Files', kind: 'system', category: 'System', version: '1.0.0', developer: 'THRENos',
     description: 'Browse folders and files',
     about: 'The file manager. Browse the simulated filesystem, copy, move and rename items, search and inspect properties.',
     icon: FolderOpen, sizeKB: 540, permissions: [],
@@ -27,7 +27,7 @@ export const CATALOG: AppManifest[] = [
     load: () => named(import('../apps/FileExplorer'), 'FileExplorer'),
   },
   {
-    id: 'terminal', name: 'Terminal', kind: 'system', category: 'System', version: '1.0.0', developer: 'Orbit',
+    id: 'terminal', name: 'Terminal', kind: 'system', category: 'System', version: '1.0.0', developer: 'THRENos',
     description: 'Command line',
     about: 'A command-line shell for the simulated filesystem, with chaining, pipes, completion and history.',
     icon: SquareTerminal, sizeKB: 460, permissions: [],
@@ -39,15 +39,15 @@ export const CATALOG: AppManifest[] = [
     },
   },
   {
-    id: 'settings', name: 'Settings', kind: 'system', category: 'System', version: '1.0.0', developer: 'Orbit',
-    description: 'Personalize ORBIT',
+    id: 'settings', name: 'Settings', kind: 'system', category: 'System', version: '1.0.0', developer: 'THRENos',
+    description: 'Personalize THRENos',
     about: 'Appearance, display, taskbar, sound, installed apps and device information.',
     icon: Settings, sizeKB: 380, permissions: [],
     launch: { defaultSize: { w: 860, h: 600 }, singleton: true },
     load: () => named(import('../apps/Settings'), 'SettingsApp'),
   },
   {
-    id: 'appstore', name: 'App Store', kind: 'system', category: 'System', version: '1.0.0', developer: 'Orbit',
+    id: 'appstore', name: 'App Store', kind: 'system', category: 'System', version: '1.0.0', developer: 'THRENos',
     description: 'Discover and install apps',
     about: 'Browse, install and remove applications. Installed apps appear on the desktop and in the Start menu.',
     icon: Package, sizeKB: 300, permissions: [],
@@ -57,7 +57,7 @@ export const CATALOG: AppManifest[] = [
 
   // ---- Bundled: preinstalled, removable ----
   {
-    id: 'notes', name: 'Notes', kind: 'bundled', category: 'Productivity', version: '1.0.0', developer: 'Orbit',
+    id: 'notes', name: 'Notes', kind: 'bundled', category: 'Productivity', version: '1.0.0', developer: 'THRENos',
     description: 'Write and save notes',
     about: 'Quick notes that save automatically as you type.',
     icon: StickyNote, sizeKB: 180, permissions: [],
@@ -69,7 +69,7 @@ export const CATALOG: AppManifest[] = [
     },
   },
   {
-    id: 'calculator', name: 'Calculator', kind: 'bundled', category: 'Utilities', version: '1.0.0', developer: 'Orbit',
+    id: 'calculator', name: 'Calculator', kind: 'bundled', category: 'Utilities', version: '1.0.0', developer: 'THRENos',
     description: 'Basic calculator',
     about: 'A four-function calculator with keyboard input.',
     icon: Calculator, sizeKB: 90, permissions: [],
@@ -77,7 +77,7 @@ export const CATALOG: AppManifest[] = [
     load: () => named(import('../apps/Calculator'), 'Calculator'),
   },
   {
-    id: 'browser', name: 'Browser', kind: 'bundled', category: 'Utilities', version: '1.0.0', developer: 'Orbit',
+    id: 'browser', name: 'Browser', kind: 'bundled', category: 'Utilities', version: '1.0.0', developer: 'THRENos',
     description: 'Simulated web browser',
     about: 'A simulated browser with built-in pages and search. It never touches the network.',
     icon: Globe, sizeKB: 720, permissions: [],
@@ -87,7 +87,7 @@ export const CATALOG: AppManifest[] = [
 
   // ---- Store: optional ----
   {
-    id: 'calendar', name: 'Calendar', kind: 'store', category: 'Productivity', version: '1.2.0', developer: 'Orbit Labs',
+    id: 'calendar', name: 'Calendar', kind: 'store', category: 'Productivity', version: '1.2.0', developer: 'THRENos Labs',
     description: 'Plan your month and keep events',
     about: 'A month calendar with a Monday start. Add, review and remove events; they are stored with the app and survive restarts.',
     icon: CalendarDays, sizeKB: 420, permissions: ['notifications'],
@@ -96,7 +96,7 @@ export const CATALOG: AppManifest[] = [
     whatsNew: 'Month navigation with keyboard arrows.',
   },
   {
-    id: 'markdown', name: 'Markdown Editor', kind: 'store', category: 'Productivity', version: '1.0.3', developer: 'Orbit Labs',
+    id: 'markdown', name: 'Markdown Editor', kind: 'store', category: 'Productivity', version: '1.0.3', developer: 'THRENos Labs',
     description: 'Write with a live preview',
     about: 'Edit Markdown with a live preview, keep documents inside the app, and open or save .md files in your home folder.',
     icon: FileText, sizeKB: 610, permissions: ['filesystem', 'notifications'],
@@ -125,7 +125,7 @@ export const CATALOG: AppManifest[] = [
     whatsNew: 'First release.',
   },
   {
-    id: 'imageviewer', name: 'Image Viewer', kind: 'store', category: 'Media', version: '1.3.1', developer: 'Orbit Labs',
+    id: 'imageviewer', name: 'Image Viewer', kind: 'store', category: 'Media', version: '1.3.1', developer: 'THRENos Labs',
     description: 'View, zoom and import pictures',
     about: 'Browse a built-in gallery, open pictures from your home folder, import images from your computer and set one as the wallpaper.',
     icon: Image, sizeKB: 740, permissions: ['filesystem'],

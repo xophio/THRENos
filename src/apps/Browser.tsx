@@ -7,23 +7,23 @@ interface Site { title: string; body: string[] }
 
 // Simulated web: addresses map to built-in pages.
 const SITES: Record<string, Site> = {
-  'orbit://home': {
+  'threnos://home': {
     title: 'New Tab',
-    body: ['Welcome to Orbit Browser.', 'Try: orbit://about, orbit://news, orbit://docs — or search anything.'],
+    body: ['Welcome to THRENos Browser.', 'Try: threnos://about, threnos://news, threnos://docs — or search anything.'],
   },
-  'orbit://about': { title: 'About ORBIT', body: ['ORBIT OS is a desktop operating system simulated entirely in your browser.', 'Windows, files, notes and settings persist locally.'] },
-  'orbit://news': { title: 'Orbit News', body: ['• Window snapping now supports all screen edges.', '• Terminal gained redirects: echo hi > file.txt', '• New accent colors in Settings.'] },
-  'orbit://docs': { title: 'Docs', body: ['Shortcuts', 'Ctrl+Space — search', 'Alt+W — close window', 'Alt+M — minimize', 'Alt+←/→/↑ — snap window', 'Alt+T — open terminal'] },
+  'threnos://about': { title: 'About THRENos', body: ['THRENos is a desktop operating system simulated entirely in your browser.', 'Windows, files, notes and settings persist locally.'] },
+  'threnos://news': { title: 'THRENos News', body: ['• Window snapping now supports all screen edges.', '• Terminal gained redirects: echo hi > file.txt', '• New accent colors in Settings.'] },
+  'threnos://docs': { title: 'Docs', body: ['Shortcuts', 'Ctrl+Space — search', 'Alt+W — close window', 'Alt+M — minimize', 'Alt+←/→/↑ — snap window', 'Alt+T — open terminal'] },
 }
 
-const HOME_URL = 'orbit://home'
+const HOME_URL = 'threnos://home'
 
 const resolveInput = (raw: string): string => {
   const v = raw.trim().toLowerCase()
   if (!v) return HOME_URL
   if (SITES[v]) return v
-  if (v.startsWith('orbit://')) return v
-  return `orbit://search?q=${encodeURIComponent(raw.trim())}`
+  if (v.startsWith('threnos://')) return v
+  return `threnos://search?q=${encodeURIComponent(raw.trim())}`
 }
 
 export function Browser(_: AppProps) {
@@ -40,7 +40,7 @@ export function Browser(_: AppProps) {
       setHistory([...history.slice(0, idx + 1), target])
       setIdx(idx + 1)
     } else setIdx(nextIdx)
-    setInput(target.startsWith('orbit://search') ? decodeURIComponent(target.split('q=')[1]) : target)
+    setInput(target.startsWith('threnos://search') ? decodeURIComponent(target.split('q=')[1]) : target)
   }
 
   const submit = (e: FormEvent) => {
@@ -53,7 +53,7 @@ export function Browser(_: AppProps) {
     if (n >= 0 && n < history.length) load(history[n], false, n)
   }
 
-  const isSearch = url.startsWith('orbit://search')
+  const isSearch = url.startsWith('threnos://search')
   const query = isSearch ? decodeURIComponent(url.split('q=')[1] ?? '') : ''
   const page = SITES[url]
   const btn = 'ibtn grid size-8 place-items-center'
@@ -79,7 +79,7 @@ export function Browser(_: AppProps) {
           <div className="mx-auto max-w-2xl px-8 py-10">
             {url === HOME_URL && (
               <div className="mb-8 flex flex-col items-center gap-4">
-                <h1 className="text-[64px] font-bold leading-none tracking-[-0.065em]">Orbit<span className="text-[var(--accent)]">.</span></h1>
+                <h1 className="text-[64px] font-bold leading-none tracking-[-0.065em]">THRENos<span className="text-[var(--accent)]">.</span></h1>
                 <span className="kicker">Browser</span>
               </div>
             )}
@@ -92,8 +92,8 @@ export function Browser(_: AppProps) {
                 {url === HOME_URL && (
                   <div className="mt-6 flex flex-wrap justify-center gap-2">
                     {['about', 'news', 'docs'].map((s) => (
-                      <button key={s} onClick={() => load(`orbit://${s}`, true)} className="border border-ink px-3 py-1.5 font-mono text-[12px] hover:bg-ink hover:text-paper">
-                        orbit://{s}
+                      <button key={s} onClick={() => load(`threnos://${s}`, true)} className="border border-ink px-3 py-1.5 font-mono text-[12px] hover:bg-ink hover:text-paper">
+                        threnos://{s}
                       </button>
                     ))}
                   </div>
@@ -107,7 +107,7 @@ export function Browser(_: AppProps) {
                 <div className="space-y-4">
                   {['Overview', 'Guide', 'Community'].map((t) => (
                     <div key={t}>
-                      <div className="text-xs text-white/55">orbit://{query.toLowerCase().replace(/\s+/g, '-')}/{t.toLowerCase()}</div>
+                      <div className="text-xs text-white/55">threnos://{query.toLowerCase().replace(/\s+/g, '-')}/{t.toLowerCase()}</div>
                       <div className="accent-text text-base">{query} — {t}</div>
                       <div className="text-sm text-white/55">A simulated page about {query}. Nothing here is real, but it feels like it.</div>
                     </div>

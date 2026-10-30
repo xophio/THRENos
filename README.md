@@ -1,4 +1,4 @@
-# ORBIT OS
+# THRENos
 
 A desktop operating system that runs entirely in the browser, designed in the Swiss / International Typographic Style.
 

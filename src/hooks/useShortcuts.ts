@@ -4,6 +4,7 @@ import { useWorkspaces } from '../store/workspaceStore'
 import { cycleWorkspace, moveFocusedWindow, switchWorkspace } from '../store/workspaceActions'
 import { useUi } from '../store/uiStore'
 import { launchApp } from '../os/lifecycle'
+import { lock, useSystem } from '../system/systemStore'
 import type { SnapRegion } from '../types'
 
 const SNAP_KEYS: Record<string, SnapRegion> = {
@@ -28,6 +29,8 @@ function stepSwitcher(direction: 1 | -1) {
 export function useShortcuts() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // Locked, signed out or booting: the desktop must not react to the keyboard.
+      if (useSystem.getState().phase !== 'desktop') return
       const ui = useUi.getState()
       const wm = useWindows.getState()
 
@@ -38,11 +41,19 @@ export function useShortcuts() {
       }
       if (e.key === 'Escape') {
         if (ui.switcher) ui.setSwitcher(null)
+        else if (ui.powerMenu) ui.setPowerMenu(false)
         else if (ui.overview) ui.setOverview(false)
         else if (ui.startOpen || ui.tray) ui.closeAll()
         return
       }
       if (!e.altKey) return
+
+      // Alt+L locks THRENos. (Win+L is reserved by the operating system and cannot be used by a web page.)
+      if (e.key.toLowerCase() === 'l' && !e.shiftKey && !e.ctrlKey) {
+        e.preventDefault()
+        lock()
+        return
+      }
 
       // Alt+Tab (and Alt+` where the OS keeps Alt+Tab for itself) cycles windows; releasing Alt activates.
       if (e.key === 'Tab' || e.code === 'Backquote') {
@@ -85,7 +96,7 @@ export function useShortcuts() {
 
     // Releasing Alt confirms the Alt+Tab selection.
     const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key !== 'Alt') return
+      if (e.key !== 'Alt' || useSystem.getState().phase !== 'desktop') return
       const { switcher, setSwitcher } = useUi.getState()
       if (!switcher) return
       e.preventDefault() // stops the browser from moving focus to its menu bar

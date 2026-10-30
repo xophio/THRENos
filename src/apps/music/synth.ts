@@ -48,10 +48,10 @@ const MINOR_PENTATONIC = [0, 3, 5, 7, 10]
 const DORIAN = [0, 2, 3, 5, 7, 9, 10]
 
 export const TRACKS: TrackSpec[] = [
-  { id: 'grid-study', title: 'Grid Study', subtitle: 'Orbit Labs · generated', bpm: 104, seconds: 30, notes: arpeggio(60, PENTATONIC, 12, [0, 2, 4, 3, 5, 3, 4, 2]) },
-  { id: 'signal', title: 'Signal', subtitle: 'Orbit Labs · generated', bpm: 72, seconds: 34, notes: arpeggio(57, MINOR_PENTATONIC, 8, [0, 1, 2, 4, 2, 1]) },
-  { id: 'quarter-rest', title: 'Quarter Rest', subtitle: 'Orbit Labs · generated', bpm: 96, seconds: 30, notes: arpeggio(62, DORIAN, 10, [0, 4, 2, 6, 4, 2, 5, 1]) },
-  { id: 'paper-rain', title: 'Paper Rain', subtitle: 'Orbit Labs · generated', bpm: 80, seconds: 36, notes: sparse(65, PENTATONIC, 44, 7) },
+  { id: 'grid-study', title: 'Grid Study', subtitle: 'THRENos Labs · generated', bpm: 104, seconds: 30, notes: arpeggio(60, PENTATONIC, 12, [0, 2, 4, 3, 5, 3, 4, 2]) },
+  { id: 'signal', title: 'Signal', subtitle: 'THRENos Labs · generated', bpm: 72, seconds: 34, notes: arpeggio(57, MINOR_PENTATONIC, 8, [0, 1, 2, 4, 2, 1]) },
+  { id: 'quarter-rest', title: 'Quarter Rest', subtitle: 'THRENos Labs · generated', bpm: 96, seconds: 30, notes: arpeggio(62, DORIAN, 10, [0, 4, 2, 6, 4, 2, 5, 1]) },
+  { id: 'paper-rain', title: 'Paper Rain', subtitle: 'THRENos Labs · generated', bpm: 80, seconds: 36, notes: sparse(65, PENTATONIC, 44, 7) },
 ]
 
 const SAMPLE_RATE = 22050

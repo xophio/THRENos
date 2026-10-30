@@ -11,7 +11,7 @@ import { createWorkspace, deleteWorkspace, renameWorkspace, switchWorkspace } fr
 import { SNAP_LABELS } from '../../utils/snap'
 import { LayoutMap } from './LayoutMap'
 
-const DRAG_TYPE = 'application/x-orbit-window'
+const DRAG_TYPE = 'application/x-threnos-window'
 
 function stateLabel(w: WindowState): string {
   if (w.minimized) return 'Minimized'

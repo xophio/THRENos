@@ -32,7 +32,7 @@ export function DesktopClock() {
       style={{ right: screenW - (area.x + area.w) + MARGIN, top: area.y + MARGIN }}
     >
       <div className="flex items-center justify-between border-b border-ink px-4 py-2">
-        <span className="kicker !text-ink">Orbit OS</span>
+        <span className="kicker !text-ink">THRENos</span>
         <span className="kicker">Week {isoWeek(now)}</span>
       </div>
       <div className="px-4 pb-3 pt-4">

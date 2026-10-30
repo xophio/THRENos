@@ -27,3 +27,12 @@ export function useWallpaperStyle(): CSSProperties {
   }
   return wallpaperStyle(WALLPAPERS.find((x) => x.id === id) ?? WALLPAPERS[0], theme)
 }
+
+/** Wallpaper behind the lock and login screens: the desktop's own, or a built-in one chosen in Settings. */
+export function useLockWallpaperStyle(): CSSProperties {
+  const desktop = useWallpaperStyle()
+  const choice = useSettings((st) => st.lockWallpaper)
+  const theme = useResolvedTheme()
+  const builtIn = WALLPAPERS.find((w) => w.id === choice)
+  return choice === 'desktop' || !builtIn ? desktop : wallpaperStyle(builtIn, theme)
+}

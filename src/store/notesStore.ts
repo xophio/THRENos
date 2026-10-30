@@ -14,7 +14,7 @@ export const useNotes = create<NotesState>()(
   persist(
     (set) => ({
       notes: [
-        { id: 'welcome', title: 'Welcome to ORBIT', body: 'Notes save automatically.\n\nTry Ctrl+Space for search, Alt+Arrows to snap windows.', updated: Date.now() },
+        { id: 'welcome', title: 'Welcome to THRENos', body: 'Notes save automatically.\n\nTry Ctrl+Space for search, Alt+Arrows to snap windows.', updated: Date.now() },
       ],
       create: () => {
         const id = uid()
@@ -25,6 +25,6 @@ export const useNotes = create<NotesState>()(
         set((s) => ({ notes: s.notes.map((n) => (n.id === id ? { ...n, ...patch, updated: Date.now() } : n)) })),
       remove: (id) => set((s) => ({ notes: s.notes.filter((n) => n.id !== id) })),
     }),
-    { name: 'orbit-notes' },
+    { name: 'threnos-notes' },
   ),
 )

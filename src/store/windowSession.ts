@@ -1,15 +1,17 @@
 import type { Rect, SnapSide, WindowState } from '../types'
 import { SNAP_REGIONS } from '../utils/snap'
 import { getApp } from '../os/registry'
-import { useSettings } from './settingsStore'
+import { PRIMARY_PROFILE, getActiveProfileId, scopedKey } from '../system/activeProfile'
 import { useWindows } from './windowStore'
 import { useWorkspaces } from './workspaceStore'
 
-const KEY = 'orbit-windows'
+const BASE = 'threnos-windows'
 const VERSION = 1
 
 const isObject = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
 const num = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
+
+const key = () => scopedKey(BASE, getActiveProfileId() ?? PRIMARY_PROFILE)
 
 const rectOrNull = (v: unknown): Rect | null =>
   isObject(v) && num(v.x) && num(v.y) && num(v.w) && num(v.h) && v.w > 0 && v.h > 0 ? { x: v.x, y: v.y, w: v.w, h: v.h } : null
@@ -48,30 +50,42 @@ export function parseSession(raw: unknown): WindowState[] {
   return out
 }
 
-function save() {
+// Saving only happens while a profile's desktop is in use, so logging out or restarting
+// (which clear the windows) never overwrites the layout that was just saved.
+let tracking = false
+
+export function saveWindowSession() {
+  if (!tracking) return
   try {
-    const windows = useWindows.getState().windows
-    localStorage.setItem(KEY, JSON.stringify({ version: VERSION, windows }))
+    localStorage.setItem(key(), JSON.stringify({ version: VERSION, windows: useWindows.getState().windows }))
   } catch {
     // Storage may be full or unavailable; losing the layout is harmless.
   }
 }
 
-/** Restores the saved layout (when enabled in Settings) and keeps it saved from then on. */
-export function startWindowSession() {
-  if (useSettings.getState().restoreWindows) {
-    try {
-      const raw = localStorage.getItem(KEY)
-      if (raw) useWindows.getState().hydrate(parseSession(JSON.parse(raw)))
-    } catch {
-      // Damaged data: start with no windows.
-    }
-  }
-
-  let timer = 0
-  useWindows.subscribe(() => {
-    window.clearTimeout(timer)
-    timer = window.setTimeout(save, 250)
-  })
-  window.addEventListener('pagehide', save)
+/** Starts or stops writing the layout. Turning it off first flushes the current layout. */
+export function setWindowTracking(on: boolean) {
+  if (!on) saveWindowSession()
+  tracking = on
 }
+
+/** Loads the active profile's saved layout into the window manager. Returns how many windows came back. */
+export function restoreWindowSession(): number {
+  try {
+    const raw = localStorage.getItem(key())
+    const windows = raw ? parseSession(JSON.parse(raw)) : []
+    useWindows.getState().hydrate(windows)
+    return windows.length
+  } catch {
+    useWindows.getState().hydrate([])
+    return 0
+  }
+}
+
+let timer = 0
+useWindows.subscribe(() => {
+  if (!tracking) return
+  window.clearTimeout(timer)
+  timer = window.setTimeout(saveWindowSession, 250)
+})
+window.addEventListener('pagehide', saveWindowSession)

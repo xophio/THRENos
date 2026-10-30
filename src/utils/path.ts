@@ -1,4 +1,4 @@
-export const HOME = '/home/orbit'
+export const HOME = '/home/threnos'
 
 export function normalize(path: string, cwd = '/'): string {
   const raw = path.startsWith('/') ? path : `${cwd}/${path}`

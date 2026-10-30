@@ -56,7 +56,7 @@ function AppDetail({ app, onBack }: { app: AppManifest; onBack: () => void }) {
       <Section title="Details">
         <Info label="Category" value={app.category} />
         <Info label="Source" value={KIND_LABEL[app.kind]} />
-        <Info label="Installed" value={record && record.installedAt > 1e9 ? new Date(record.installedAt).toLocaleString() : 'With ORBIT OS'} />
+        <Info label="Installed" value={record && record.installedAt > 1e9 ? new Date(record.installedAt).toLocaleString() : 'With THRENos'} />
         <Info label="Install size" value={formatSize(app.sizeKB * 1024)} />
         <Info label="Saved data" value={formatSize(used)} />
       </Section>

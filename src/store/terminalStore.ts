@@ -20,6 +20,6 @@ export const useTerminalHistory = create<TerminalState>()(
         ),
       clear: () => set({ history: [] }),
     }),
-    { name: 'orbit-terminal' },
+    { name: 'threnos-terminal' },
   ),
 )

@@ -23,6 +23,6 @@ export const useExplorerPrefs = create<ExplorerPrefs>()(
       setSort: (key) =>
         set((s) => (s.sortKey === key ? { sortDir: s.sortDir === 'asc' ? 'desc' : 'asc' } : { sortKey: key, sortDir: 'asc' })),
     }),
-    { name: 'orbit-explorer' },
+    { name: 'threnos-explorer' },
   ),
 )

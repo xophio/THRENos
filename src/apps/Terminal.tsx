@@ -16,7 +16,7 @@ type Entry =
 // Show just the last path segment, like a shell completion list.
 const listLabel = (c: string) => c.replace(/\\(.)/g, '$1').match(/[^/]*\/?$/)?.[0] ?? c
 
-const WELCOME: Entry = { type: 'out', text: 'ORBIT OS terminal — type "help" for commands.' }
+const WELCOME: Entry = { type: 'out', text: 'THRENos terminal — type "help" for commands.' }
 
 export function Terminal({ windowId }: AppProps) {
   const username = useSettings((s) => s.username)
@@ -39,7 +39,7 @@ export function Terminal({ windowId }: AppProps) {
   }, [])
   useEffect(() => { endRef.current?.scrollIntoView() }, [entries, input])
 
-  const promptStr = `${username}@orbit:${displayPath(cwd)}$`
+  const promptStr = `${username}@threnos:${displayPath(cwd)}$`
 
   const edit = (value: string) => {
     setInput(value)

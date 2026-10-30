@@ -115,7 +115,7 @@ function resolveDest(cmd: string, sources: string[], destArg: string, ctx: Ctx):
 const COMMANDS: Record<string, Command> = {
   help: () => ({
     out: [
-      'ORBIT shell — available commands',
+      'THRENos shell — available commands',
       '',
       'Files       ls [-a -l]   cd [dir]     pwd        mkdir [-p]   touch',
       '            cat          rm [-r -f]   mv         cp [-r]      echo [-n]',
@@ -350,9 +350,9 @@ const COMMANDS: Record<string, Command> = {
   },
   notify: ({ args }) => { notify('Terminal', args.join(' ') || 'Hello from the terminal') },
   whoami: () => ({ out: useSettings.getState().username }),
-  hostname: () => ({ out: 'orbit' }),
+  hostname: () => ({ out: 'threnos' }),
   date: () => ({ out: new Date().toString() }),
-  uname: () => ({ out: 'ORBIT OS 1.0 (browser)' }),
+  uname: () => ({ out: 'THRENos 1.0 (browser)' }),
   uptime: () => ({ out: `up ${Math.floor((Date.now() - bootTime) / 1000)}s` }),
   history: ({ args }) => {
     const store = useTerminalHistory.getState()
@@ -361,10 +361,10 @@ const COMMANDS: Record<string, Command> = {
   },
   neofetch: ({ cwd }) => ({
     out: [
-      `   ◯──◯    ${useSettings.getState().username}@orbit`,
+      `   ◯──◯    ${useSettings.getState().username}@threnos`,
       '  ╱    ╲   -------------',
-      ' ◯  ORBIT ◯  OS: ORBIT OS 1.0',
-      '  ╲    ╱   Shell: orbsh',
+      ' ◯ THRENos ◯  OS: THRENos 1.0',
+      '  ╲    ╱   Shell: thrsh',
       `   ◯──◯    Dir: ${displayPath(cwd)}`,
     ].join('\n'),
   }),
@@ -409,9 +409,9 @@ export function run(input: string, startCwd: string, lastCode = 0): RunResult {
   const out = (text: string) => result.lines.push(...(text === '' ? [''] : lines(text)).map((t) => ({ kind: 'out' as const, text: t })))
 
   const { tokens, error: tokError } = tokenize(input)
-  if (tokError) { err(`orbsh: syntax error: ${tokError}`); result.code = 2; return result }
+  if (tokError) { err(`thrsh: syntax error: ${tokError}`); result.code = 2; return result }
   const { chain, error } = parse(tokens)
-  if (error) { err(`orbsh: ${error}`); result.code = 2; return result }
+  if (error) { err(`thrsh: ${error}`); result.code = 2; return result }
 
   let code = lastCode
   for (const item of chain) {
@@ -423,7 +423,7 @@ export function run(input: string, startCwd: string, lastCode = 0): RunResult {
       const [nameTok, ...argToks] = cmd.args
       const name = expand(nameTok, result.cwd, code)
       const handler = COMMANDS[name]
-      if (!handler) { err(`orbsh: command not found: ${name}`); code = 127; stdin = null; return }
+      if (!handler) { err(`thrsh: command not found: ${name}`); code = 127; stdin = null; return }
 
       const res = handler({ args: argToks.map((a) => expand(a, result.cwd, code)), stdin, cwd: result.cwd }) ?? {}
       code = res.code ?? 0
@@ -438,7 +438,7 @@ export function run(input: string, startCwd: string, lastCode = 0): RunResult {
         const path = resolvePath(target, result.cwd)
         const prev = cmd.redirect.append ? (fs().read(path) ?? '') : ''
         const werr = fs().write(path, prev + text)
-        if (werr) { err(`orbsh: ${target}: ${werr === 'Is a directory' ? werr : 'No such file or directory'}`); code = 1 }
+        if (werr) { err(`thrsh: ${target}: ${werr === 'Is a directory' ? werr : 'No such file or directory'}`); code = 1 }
         stdin = null
       } else if (idx < item.pipeline.length - 1) {
         stdin = text

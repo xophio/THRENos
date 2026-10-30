@@ -6,6 +6,8 @@ interface UiState {
   startOpen: boolean
   tray: TrayPanel
   overview: boolean
+  powerMenu: boolean
+  setPowerMenu: (open?: boolean) => void
   /** Alt+Tab switcher while Alt is held; null when closed. */
   switcher: { ids: string[]; index: number } | null
   setOverview: (open?: boolean) => void
@@ -19,6 +21,8 @@ export const useUi = create<UiState>((set) => ({
   startOpen: false,
   tray: null,
   overview: false,
+  powerMenu: false,
+  setPowerMenu: (open) => set((s) => ({ powerMenu: open ?? !s.powerMenu })),
   switcher: null,
   setOverview: (open) => set((s) => ({ overview: open ?? !s.overview, startOpen: false, tray: null, switcher: null })),
   setSwitcher: (switcher) => set({ switcher }),

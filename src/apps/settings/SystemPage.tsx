@@ -5,7 +5,6 @@ import { useSettings } from '../../store/settingsStore'
 import { useFs } from '../../store/fsStore'
 import { useNotes } from '../../store/notesStore'
 import { useTerminalHistory } from '../../store/terminalStore'
-import { useCustomWallpapers } from '../../store/wallpaperStore'
 import { notify } from '../../store/notificationStore'
 import { Dialog } from '../../components/shared/Dialog'
 import { Button, Section, SettingRow } from '../../components/shared/controls'
@@ -60,11 +59,25 @@ const CONFIRM_COPY: Record<Exclude<Confirm, null>, { title: string; body: string
   settings: { title: 'Reset settings', body: 'Appearance, display, taskbar and sound return to their defaults. Your files and notes are kept.' },
   filesystem: { title: 'Reset filesystem', body: 'All files and folders return to the factory layout. Notes are kept.' },
   history: { title: 'Clear terminal history', body: 'Saved commands are removed from every Terminal window.' },
-  everything: { title: 'Erase all data', body: 'Settings, files, notes, wallpapers and history are erased and ORBIT OS restarts.' },
+  everything: { title: 'Erase all data', body: 'Every profile, with its files, notes, settings, wallpapers and history, is erased and THRENos restarts at first-time setup.' },
+}
+
+/** Resetting preferences must not rename the signed-in user, who is named by their profile. */
+function resetSettingsKeepingProfile() {
+  const name = useSettings.getState().username
+  useSettings.getState().reset()
+  useSettings.setState({ username: name })
+}
+
+/** Removes everything THRENos saved in this browser, then starts over. */
+function eraseEverything() {
+  for (const key of Object.keys(localStorage)) if (key.startsWith('threnos-')) localStorage.removeItem(key)
+  try { sessionStorage.removeItem('threnos-session') } catch { /* nothing to clear */ }
+  location.reload()
 }
 
 export function SystemPage() {
-  const { username, deviceName, set } = useSettings()
+  const { deviceName, set } = useSettings()
   const tree = useFs((s) => s.tree)
   const notes = useNotes((s) => s.notes)
   const uptime = useUptime()
@@ -76,16 +89,11 @@ export function SystemPage() {
 
   const apply = () => {
     switch (confirm) {
-      case 'settings': useSettings.getState().reset(); notify('Settings reset'); break
+      case 'settings': resetSettingsKeepingProfile(); notify('Settings reset'); break
       case 'filesystem': useFs.getState().reset(); notify('Filesystem reset'); break
       case 'history': useTerminalHistory.getState().clear(); notify('Terminal history cleared'); break
       case 'everything':
-        useSettings.getState().reset()
-        useFs.getState().reset()
-        useTerminalHistory.getState().clear()
-        useCustomWallpapers.setState({ images: [] })
-        useNotes.setState({ notes: [] })
-        location.reload()
+        eraseEverything()
         break
     }
     setConfirm(null)
@@ -106,16 +114,7 @@ export function SystemPage() {
             className="field w-44 px-3 py-1.5 text-[13px]"
           />
         </SettingRow>
-        <SettingRow label="User name">
-          <input
-            aria-label="User name"
-            value={username}
-            maxLength={20}
-            onChange={(e) => set({ username: e.target.value })}
-            className="field w-44 px-3 py-1.5 text-[13px]"
-          />
-        </SettingRow>
-        <Info label="Operating system" value={`ORBIT OS ${OS_VERSION}`} />
+        <Info label="Operating system" value={`THRENos ${OS_VERSION}`} />
         <Info label="Build" value={OS_BUILD} />
         <Info label="Runs on" value={browserName()} />
         <Info label="Platform" value={nav.platform || 'Unknown'} />
@@ -128,7 +127,7 @@ export function SystemPage() {
 
       <Section title="Storage">
         <div className="mb-2 flex items-baseline justify-between text-sm">
-          <span className="flex items-center gap-2 font-semibold"><HardDrive size={15} strokeWidth={1.5} /> ORBIT disk</span>
+          <span className="flex items-center gap-2 font-semibold"><HardDrive size={15} strokeWidth={1.5} /> THRENos disk</span>
           <span data-testid="storage-summary" className="font-mono text-[12px] text-white/65">{formatSize(usage.used)} used of {formatSize(DISK_CAPACITY)}</span>
         </div>
         <div

@@ -1,16 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { Power, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { popupStyle, slideOffset, useScreen } from '../../utils/screen'
 import { useRegisteredApps } from '../../os/registry'
 import { launchApp } from '../../os/lifecycle'
 import { useUi } from '../../store/uiStore'
 import { useSettings } from '../../store/settingsStore'
+import { useAuth } from '../../system/authStore'
+import { useSystem } from '../../system/systemStore'
+import { Avatar } from '../../system/ui/Avatar'
+import { PowerMenu } from '../../system/ui/PowerMenu'
 
 function Panel() {
   const appList = useRegisteredApps()
   const setStart = useUi((s) => s.setStart)
   const username = useSettings((s) => s.username)
+  const profileId = useSystem((s) => s.profileId)
+  const avatar = useAuth((s) => s.profiles.find((p) => p.id === profileId)?.avatar ?? 'signal')
   const position = useSettings((s) => s.taskbarPosition)
   const screen = useScreen()
   const [q, setQ] = useState('')
@@ -47,7 +53,7 @@ function Panel() {
       onPointerDown={(e) => e.stopPropagation()}
     >
       <div className="flex items-baseline justify-between border-b border-ink px-4 pb-2 pt-3">
-        <span className="text-[22px] font-bold leading-none tracking-[-0.04em]">Orbit<span className="text-[var(--accent)]">.</span></span>
+        <span className="text-[22px] font-bold leading-none tracking-[-0.04em]">THRENos<span className="text-[var(--accent)]">.</span></span>
         <span className="kicker">{q ? `${results.length} found` : 'Applications'}</span>
       </div>
       <div className="flex items-center gap-2.5 border-b border-rule px-4 py-2.5">
@@ -87,14 +93,10 @@ function Panel() {
       </div>
       <div className="flex items-center justify-between border-t border-ink px-4 py-2.5">
         <div className="flex items-center gap-2.5 text-[12px] font-medium">
-          <span className="grid size-6 place-items-center bg-[var(--accent)] text-[11px] font-bold text-on-accent">
-            {username.slice(0, 1).toUpperCase() || '?'}
-          </span>
+          <Avatar id={avatar} size={28} />
           {username}
         </div>
-        <button aria-label="Reload ORBIT" title="Restart" onClick={() => location.reload()} className="ibtn grid size-7 place-items-center">
-          <Power size={14} strokeWidth={1.5} />
-        </button>
+        <PowerMenu mode="session" />
       </div>
     </motion.div>
   )

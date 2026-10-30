@@ -32,7 +32,7 @@ export const useAppDataStore = create<AppDataState>()(
         }),
     }),
     {
-      name: 'orbit-appdata',
+      name: 'threnos-appdata',
       version: 1,
       partialize: (s) => ({ buckets: s.buckets }),
       merge: (persisted, current) => {

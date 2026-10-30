@@ -76,7 +76,7 @@ export const useInstallStore = create<InstallState>()(
       setDesktopShortcut: (id, desktop) => set((s) => ({ shortcuts: { ...s.shortcuts, [id]: { desktop } } })),
     }),
     {
-      name: 'orbit-apps',
+      name: 'threnos-apps',
       version: 1,
       partialize: (s) => ({ initialized: s.initialized, installed: s.installed, grants: s.grants, shortcuts: s.shortcuts }),
       merge: (persisted, current) => ({ ...current, ...sanitize(persisted) }),

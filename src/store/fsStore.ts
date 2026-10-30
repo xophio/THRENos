@@ -17,12 +17,12 @@ const initialTree = (): Tree => ({
   [`${HOME}/Downloads`]: folder(),
   [`${HOME}/Pictures`]: folder(),
   [`${HOME}/Music`]: folder(),
-  [`${HOME}/Documents/README.txt`]: file('Welcome to ORBIT OS.\n\nEverything here is simulated and saved in your browser.'),
-  [`${HOME}/Documents/todo.md`]: file('# Todo\n- [x] Boot ORBIT OS\n- [ ] Explore the terminal'),
+  [`${HOME}/Documents/README.txt`]: file('Welcome to THRENos.\n\nEverything here is simulated and saved in your browser.'),
+  [`${HOME}/Documents/todo.md`]: file('# Todo\n- [x] Boot THRENos\n- [ ] Explore the terminal'),
   [`${HOME}/Pictures/readme.txt`]: file('Drop images here. (Imaginary ones.)'),
   '/etc': folder(),
-  '/etc/hostname': file('orbit'),
-  '/etc/os-release': file('NAME="ORBIT OS"\nVERSION="1.0"'),
+  '/etc/hostname': file('threnos'),
+  '/etc/os-release': file('NAME="THRENos"\nVERSION="1.0"'),
 })
 
 interface FsState {
@@ -136,6 +136,6 @@ export const useFs = create<FsState>()(
       },
       reset: () => set({ tree: initialTree() }),
     }),
-    { name: 'orbit-fs', partialize: (s) => ({ tree: s.tree }) },
+    { name: 'threnos-fs', partialize: (s) => ({ tree: s.tree }) },
   ),
 )
