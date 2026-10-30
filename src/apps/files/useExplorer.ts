@@ -7,6 +7,7 @@ import { useExplorerPrefs } from '../../store/explorerStore'
 import { notify } from '../../store/notificationStore'
 import { HOME, baseName, displayPath, joinPath, parentOf } from '../../utils/path'
 import { kindOf, uniqueName } from '../../utils/files'
+import { openFileWithApp } from '../../os/lifecycle'
 
 export type Dialog = { type: 'properties' | 'delete'; paths: string[] } | null
 export interface Editing { path: string; text: string; saved: string }
@@ -70,6 +71,8 @@ export function useExplorer(initialPath: string = HOME) {
 
   const open = (e: FsEntry) => {
     if (e.type === 'folder') go(e.path)
+    // An installed app that declares this file type opens it; otherwise use the built-in text editor.
+    else if (openFileWithApp(e.path)) return
     else setEditing({ path: e.path, text: e.content ?? '', saved: e.content ?? '' })
   }
 

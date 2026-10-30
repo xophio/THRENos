@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import type { PointerEvent as RPointerEvent } from 'react'
-import { APP_LIST } from '../../apps/registry'
+import { useRegisteredApps } from '../../os/registry'
+import { useInstallStore } from '../../os/installStore'
+import { launchApp } from '../../os/lifecycle'
 import type { AppId } from '../../types'
 import { useSettings } from '../../store/settingsStore'
-import { useWindows } from '../../store/windowStore'
 import { clamp } from '../../utils'
 import { useScreen, useWorkArea, workArea } from '../../utils/screen'
 
@@ -15,7 +16,10 @@ const PAD = GRID_PAD
 export function DesktopIcons() {
   const positions = useSettings((s) => s.iconPositions)
   const setIconPosition = useSettings((s) => s.setIconPosition)
-  const open = useWindows((s) => s.open)
+  const registered = useRegisteredApps()
+  const shortcuts = useInstallStore((s) => s.shortcuts)
+  // System apps always have a shortcut; others follow the per-app setting (default on).
+  const appList = registered.filter((a) => a.kind === 'system' || shortcuts[a.id]?.desktop !== false)
   const area = useWorkArea()
   const k = useScreen((s) => s.k)
   const [selected, setSelected] = useState<AppId | null>(null)
@@ -72,7 +76,7 @@ export function DesktopIcons() {
 
   return (
     <div className="absolute inset-0" onPointerDown={() => setSelected(null)}>
-      {APP_LIST.map((app, i) => {
+      {appList.map((app, i) => {
         const base = fit(positions[app.id] ?? defaultPos(i))
         const dragging = dragPos?.id === app.id
         const pos = dragging ? dragPos : base
@@ -82,7 +86,7 @@ export function DesktopIcons() {
             key={app.id}
             data-icon={app.id}
             onPointerDown={(e) => onDown(e, app.id, base)}
-            onDoubleClick={() => open(app.id)}
+            onDoubleClick={() => launchApp(app.id)}
             onContextMenu={(e) => e.stopPropagation()}
             className={`absolute flex cursor-default flex-col items-center gap-2 py-1.5 ${
               dragging ? 'z-10 cursor-grabbing opacity-80' : 'transition-[left,top] duration-150'

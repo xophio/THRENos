@@ -1,7 +1,11 @@
+import { Plus, X } from 'lucide-react'
 import { useSettings } from '../../store/settingsStore'
+import { useWindows } from '../../store/windowStore'
+import { MAX_NAME, MAX_WORKSPACES, useWorkspaces } from '../../store/workspaceStore'
+import { createWorkspace, deleteWorkspace, renameWorkspace } from '../../store/workspaceActions'
 import type { TaskbarPosition } from '../../store/settingsStore'
 import { useClock } from '../../hooks/useClock'
-import { Section, Segmented, SettingRow, Switch } from '../../components/shared/controls'
+import { Button, Section, Segmented, SettingRow, Switch } from '../../components/shared/controls'
 
 const POSITIONS: { value: TaskbarPosition; label: string }[] = [
   { value: 'bottom', label: 'Bottom' },
@@ -24,6 +28,47 @@ function ClockPreview() {
   )
 }
 
+/** Rename on Enter or blur, delete (windows move to the neighbouring workspace), and add. */
+function WorkspaceList() {
+  const workspaces = useWorkspaces((s) => s.workspaces)
+  const activeId = useWorkspaces((s) => s.activeId)
+  const windows = useWindows((s) => s.windows)
+
+  return (
+    <div>
+      {workspaces.map((w, i) => (
+        <div key={w.id} data-settings-workspace={w.id} className="flex items-center gap-3 border-b border-rule-soft py-2.5">
+          <span className="w-6 font-mono text-[10.5px] text-white/55">{String(i + 1).padStart(2, '0')}</span>
+          <input
+            aria-label={`Name of workspace ${i + 1}`}
+            defaultValue={w.name}
+            key={w.name}
+            maxLength={MAX_NAME}
+            onBlur={(e) => { if (e.target.value.trim()) renameWorkspace(w.id, e.target.value); else e.target.value = w.name }}
+            onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
+            className="field min-w-0 flex-1 px-2.5 py-1.5 text-[13px]"
+          />
+          <span className="w-24 text-right font-mono text-[11px] text-white/60">
+            {windows.filter((x) => x.workspaceId === w.id).length} windows
+          </span>
+          <span className="w-16 text-right">{w.id === activeId && <span className="kicker !text-[var(--accent)]">Current</span>}</span>
+          <button
+            aria-label={`Delete ${w.name}`}
+            disabled={workspaces.length <= 1}
+            onClick={() => deleteWorkspace(w.id)}
+            className="ibtn grid size-7 place-items-center disabled:opacity-30"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      ))}
+      <div className="mt-3">
+        <Button icon={Plus} disabled={workspaces.length >= MAX_WORKSPACES} onClick={() => createWorkspace()}>Add workspace</Button>
+      </div>
+    </div>
+  )
+}
+
 export function TaskbarPage() {
   const s = useSettings()
   return (
@@ -38,6 +83,25 @@ export function TaskbarPage() {
         <SettingRow label="Show app labels" hint="Horizontal taskbars only.">
           <Switch label="Show app labels" checked={s.taskbarLabels} onChange={(taskbarLabels) => s.set({ taskbarLabels })} />
         </SettingRow>
+      </Section>
+
+      <Section title="Windows">
+        <SettingRow label="Group windows by app" hint="One taskbar button per app, with a count when it has several windows.">
+          <Switch label="Group windows by app" checked={s.taskbarGrouping} onChange={(taskbarGrouping) => s.set({ taskbarGrouping })} />
+        </SettingRow>
+        <SettingRow label="Show all workspaces on the taskbar" hint="Otherwise only the current workspace's windows are listed.">
+          <Switch label="Show all workspaces on the taskbar" checked={s.taskbarAllWorkspaces} onChange={(taskbarAllWorkspaces) => s.set({ taskbarAllWorkspaces })} />
+        </SettingRow>
+        <SettingRow label="Show snap preview" hint="Outline the target area while dragging a window to an edge or corner.">
+          <Switch label="Show snap preview" checked={s.snapPreview} onChange={(snapPreview) => s.set({ snapPreview })} />
+        </SettingRow>
+        <SettingRow label="Restore windows on startup" hint="Reopen windows, workspaces and layout after a refresh. App contents start fresh.">
+          <Switch label="Restore windows on startup" checked={s.restoreWindows} onChange={(restoreWindows) => s.set({ restoreWindows })} />
+        </SettingRow>
+      </Section>
+
+      <Section title="Workspaces">
+        <WorkspaceList />
       </Section>
 
       <Section title="Clock">

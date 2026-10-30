@@ -46,6 +46,10 @@ export interface SettingsValues {
   taskbarPosition: TaskbarPosition
   taskbarAutoHide: boolean
   taskbarLabels: boolean
+  taskbarGrouping: boolean
+  taskbarAllWorkspaces: boolean
+  restoreWindows: boolean
+  snapPreview: boolean
   clock24h: boolean
   clockSeconds: boolean
   clockDate: boolean
@@ -62,6 +66,7 @@ export interface SettingsValues {
 interface SettingsState extends SettingsValues {
   set: (patch: Partial<SettingsValues>) => void
   setIconPosition: (id: AppId, pos: Pos) => void
+  clearIconPosition: (id: AppId) => void
   resetIcons: () => void
   reset: () => void
 }
@@ -71,6 +76,7 @@ export const DEFAULTS: SettingsValues = {
   animations: true, roundedCorners: false, desktopGrid: true, desktopClock: true,
   resolution: 'auto', scale: 100, brightness: 100,
   taskbarPosition: 'bottom', taskbarAutoHide: false, taskbarLabels: true,
+  taskbarGrouping: true, taskbarAllWorkspaces: false, restoreWindows: false, snapPreview: true,
   clock24h: true, clockSeconds: false, clockDate: true,
   volume: 70, muted: false, soundEffects: true,
   username: 'orbit', deviceName: 'ORBIT-PC', iconPositions: {},
@@ -83,6 +89,11 @@ export const useSettings = create<SettingsState>()(
       set: (patch) => set(patch),
       setIconPosition: (id, pos) =>
         set((s) => ({ iconPositions: { ...s.iconPositions, [id]: pos } })),
+      clearIconPosition: (id) =>
+        set((s) => {
+          const { [id]: _gone, ...iconPositions } = s.iconPositions
+          return { iconPositions }
+        }),
       resetIcons: () => set({ iconPositions: {} }),
       reset: () => set(DEFAULTS),
     }),

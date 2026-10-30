@@ -5,6 +5,7 @@ import { PersonalizationPage } from './settings/PersonalizationPage'
 import { DisplayPage } from './settings/DisplayPage'
 import { TaskbarPage } from './settings/TaskbarPage'
 import { SoundPage } from './settings/SoundPage'
+import { AppsPage } from './settings/AppsPage'
 import { SystemPage } from './settings/SystemPage'
 
 const TABS = [
@@ -12,6 +13,7 @@ const TABS = [
   { id: 'display', label: 'Display', page: DisplayPage },
   { id: 'taskbar', label: 'Taskbar', page: TaskbarPage },
   { id: 'sound', label: 'Sound', page: SoundPage },
+  { id: 'apps', label: 'Apps', page: AppsPage },
   { id: 'system', label: 'System', page: SystemPage },
 ] as const satisfies readonly { id: string; label: string; page: ComponentType }[]
 

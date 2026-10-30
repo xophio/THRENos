@@ -2,13 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Power, Search } from 'lucide-react'
 import { popupStyle, slideOffset, useScreen } from '../../utils/screen'
-import { APP_LIST } from '../../apps/registry'
+import { useRegisteredApps } from '../../os/registry'
+import { launchApp } from '../../os/lifecycle'
 import { useUi } from '../../store/uiStore'
-import { useWindows } from '../../store/windowStore'
 import { useSettings } from '../../store/settingsStore'
 
 function Panel() {
-  const open = useWindows((s) => s.open)
+  const appList = useRegisteredApps()
   const setStart = useUi((s) => s.setStart)
   const username = useSettings((s) => s.username)
   const position = useSettings((s) => s.taskbarPosition)
@@ -21,13 +21,13 @@ function Panel() {
 
   const results = useMemo(() => {
     const t = q.trim().toLowerCase()
-    return t ? APP_LIST.filter((a) => (a.name + ' ' + a.description).toLowerCase().includes(t)) : APP_LIST
-  }, [q])
+    return t ? appList.filter((a) => (a.name + ' ' + a.description + ' ' + a.category).toLowerCase().includes(t)) : appList
+  }, [q, appList])
 
   const launch = (i: number) => {
     const app = results[i]
     if (!app) return
-    open(app.id)
+    launchApp(app.id)
     setStart(false)
   }
 

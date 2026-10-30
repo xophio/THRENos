@@ -1,12 +1,21 @@
-export type AppId = 'files' | 'terminal' | 'settings' | 'notes' | 'calculator' | 'browser'
+export type AppId = string
 
 export interface Rect { x: number; y: number; w: number; h: number }
 
-export type SnapSide = 'left' | 'right' | 'top' | null
+/** Screen regions a window can snap to. "maximize" fills the work area but is tracked as `maximized`. */
+export type SnapRegion =
+  | 'left' | 'right' | 'top' | 'bottom'
+  | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+  | 'maximize'
+
+/** The region a window is currently tiled into, or null when it is free-floating or maximized. */
+export type SnapSide = Exclude<SnapRegion, 'maximize'> | null
 
 export interface WindowState extends Rect {
   id: string
   appId: AppId
+  /** The virtual desktop this window lives on. */
+  workspaceId: string
   title: string
   z: number
   minimized: boolean
@@ -38,5 +47,7 @@ export interface Note {
 
 export interface AppProps {
   windowId: string
+  /** Registered id of the app this window belongs to. */
+  appId: AppId
   props?: Record<string, unknown>
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Bell, Volume2, VolumeX } from 'lucide-react'
-import { APPS } from '../../apps/registry'
-import { useWindows } from '../../store/windowStore'
+import { TaskbarApps } from './TaskbarApps'
+import { WorkspaceSwitcher } from './WorkspaceSwitcher'
 import { useUi } from '../../store/uiStore'
 import { useSettings } from '../../store/settingsStore'
 import type { TaskbarPosition } from '../../store/settingsStore'
@@ -53,9 +53,6 @@ function Clock({ vertical }: { vertical: boolean }) {
 }
 
 export function Taskbar() {
-  const windows = useWindows((s) => s.windows)
-  const focusedId = useWindows((s) => s.focusedId)
-  const { focus, minimize } = useWindows()
   const startOpen = useUi((s) => s.startOpen)
   const trayOpen = useUi((s) => s.tray !== null)
   const setStart = useUi((s) => s.setStart)
@@ -63,7 +60,6 @@ export function Taskbar() {
   const muted = useSettings((s) => s.muted || s.volume === 0)
   const position = useSettings((s) => s.taskbarPosition)
   const autoHide = useSettings((s) => s.taskbarAutoHide)
-  const labels = useSettings((s) => s.taskbarLabels)
   const unread = useNotifications((s) => s.history.length)
   const vertical = position === 'left' || position === 'right'
 
@@ -74,11 +70,6 @@ export function Taskbar() {
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
   const shown = !autoHide || hover || startOpen || trayOpen
-
-  const click = (id: string, minimized: boolean) => {
-    if (minimized || id !== focusedId) focus(id)
-    else minimize(id)
-  }
 
   const tray = 'ibtn relative grid size-9 shrink-0 place-items-center'
   const divider = vertical ? 'my-1 h-px w-7 shrink-0 bg-rule' : 'mx-1 h-6 w-px shrink-0 bg-rule'
@@ -107,27 +98,12 @@ export function Taskbar() {
         <div className={divider} />
 
         <div className={`flex min-h-0 min-w-0 flex-1 items-center gap-1 ${vertical ? 'flex-col overflow-y-auto' : 'overflow-x-auto'}`}>
-          {windows.map((w) => {
-            const app = APPS[w.appId]
-            const active = w.id === focusedId && !w.minimized
-            return (
-              <button
-                key={w.id}
-                title={w.title}
-                data-active={active}
-                onClick={() => click(w.id, w.minimized)}
-                className={`flex h-10 shrink-0 items-center gap-2 rounded-md border transition-colors ${vertical ? 'w-10 justify-center' : 'px-3'} ${
-                  active ? 'border-ink bg-ink text-paper' : `border-transparent hover:border-rule ${w.minimized ? 'text-white/60' : ''}`
-                }`}
-              >
-                <app.icon size={16} strokeWidth={1.5} className="shrink-0" />
-                {labels && !vertical && (
-                  <span className="hidden max-w-28 truncate text-[11px] font-semibold uppercase tracking-[0.08em] md:block">{w.title}</span>
-                )}
-              </button>
-            )
-          })}
+          <TaskbarApps vertical={vertical} />
         </div>
+
+        <div className={divider} />
+
+        <WorkspaceSwitcher vertical={vertical} />
 
         <div className={divider} />
 

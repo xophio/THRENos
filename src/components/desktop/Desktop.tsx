@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { AnimatePresence } from 'motion/react'
-import { AppWindow, Image, LayoutGrid, Layers, Minimize2, RefreshCcw, StickyNote, SquareTerminal } from 'lucide-react'
+import { AppWindow, Image, LayoutGrid, Layers, Maximize2, Minimize2, RefreshCcw, Rows3, StickyNote, SquareTerminal } from 'lucide-react'
 import { useSettings } from '../../store/settingsStore'
 import { WALLPAPERS } from '../../theme/wallpapers'
 import { useWindows } from '../../store/windowStore'
@@ -54,7 +54,9 @@ export function Desktop() {
       { label: '', separator: true },
       { label: 'Cascade windows', icon: Layers, onClick: () => wm.cascade() },
       { label: 'Tile windows', icon: LayoutGrid, onClick: () => wm.tile() },
-      { label: 'Show desktop', icon: Minimize2, onClick: () => wm.minimizeAll() },
+      { label: 'Show desktop', icon: Minimize2, onClick: () => wm.minimizeAll(), hint: 'Alt+D' },
+      { label: 'Restore windows', icon: Maximize2, onClick: () => wm.restoreAll(), hint: '⇧Alt+D' },
+      { label: 'Task overview', icon: Rows3, onClick: () => useUi.getState().setOverview(true), hint: 'Alt+O' },
       { label: 'Refresh', icon: RefreshCcw, onClick: () => notify('Desktop refreshed') },
     ]
   }

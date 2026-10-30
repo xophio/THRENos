@@ -15,7 +15,7 @@ export function Toasts() {
       style={popupStyle(position, 'end', 12)}
     >
       <AnimatePresence>
-        {toasts.map((t) => (
+        {toasts.slice(-4).map((t) => (
           <motion.div
             key={t.id}
             layout

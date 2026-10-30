@@ -5,6 +5,8 @@ import { Taskbar } from './components/taskbar/Taskbar'
 import { StartMenu } from './components/taskbar/StartMenu'
 import { TrayPanels } from './components/taskbar/TrayPanels'
 import { Toasts } from './components/taskbar/Toasts'
+import { TaskOverview } from './components/overview/TaskOverview'
+import { AppSwitcher } from './components/overview/AppSwitcher'
 import { useShortcuts } from './hooks/useShortcuts'
 import { useAppearance } from './hooks/useAppearance'
 import { useSettings } from './store/settingsStore'
@@ -34,10 +36,12 @@ export default function App() {
       >
         <Desktop />
         <WindowManager />
+        <TaskOverview />
         <StartMenu />
         <TrayPanels />
         <Taskbar />
         <Toasts />
+        <AppSwitcher />
       </div>
       <div
         data-brightness-overlay

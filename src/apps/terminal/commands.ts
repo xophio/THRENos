@@ -1,12 +1,11 @@
 import { useFs } from '../../store/fsStore'
 import type { FsEntry } from '../../store/fsStore'
-import { useWindows } from '../../store/windowStore'
 import { useSettings } from '../../store/settingsStore'
 import { WALLPAPERS } from '../../theme/wallpapers'
 import { useTerminalHistory } from '../../store/terminalStore'
 import { notify } from '../../store/notificationStore'
-import { APPS } from '../registry'
-import type { AppId } from '../../types'
+import { getApp, listApps } from '../../os/registry'
+import { launchApp } from '../../os/lifecycle'
 import { HOME, baseName, displayPath, joinPath, normalize } from '../../utils/path'
 import { formatDate } from '../../utils/files'
 import { parse, tokenize } from './parser'
@@ -337,12 +336,13 @@ const COMMANDS: Record<string, Command> = {
   },
 
   open: ({ args }) => {
-    const id = args[0]?.toLowerCase() as AppId | undefined
-    if (!id) return { err: `open: missing app name. Try: ${Object.keys(APPS).join(', ')}`, code: 1 }
-    if (!(id in APPS)) return { err: `open: unknown app '${args[0]}'. Try: ${Object.keys(APPS).join(', ')}`, code: 1 }
-    useWindows.getState().open(id)
+    const names = () => listApps().map((a) => a.id).join(', ')
+    const id = args[0]?.toLowerCase()
+    if (!id) return { err: `open: missing app name. Try: ${names()}`, code: 1 }
+    if (!getApp(id)) return { err: `open: '${args[0]}' is not installed. Installed: ${names()}`, code: 1 }
+    launchApp(id)
   },
-  apps: () => ({ out: Object.values(APPS).map((x) => `${x.id.padEnd(11)} ${x.description}`).join('\n') }),
+  apps: () => ({ out: listApps().map((x) => `${x.id.padEnd(12)} ${x.version.padEnd(7)} ${x.description}`).join('\n') }),
   theme: ({ args }) => {
     const w = WALLPAPERS.find((x) => x.id === args[0])
     if (!w) return { err: `theme: choose one of ${WALLPAPERS.map((x) => x.id).join(', ')}`, code: 1 }
