@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react'
 import {
   Calculator, CalendarDays, Clock, FolderOpen, Globe, Image, Music, Package, Settings,
-  SquareTerminal, StickyNote, CloudSun, FileText,
+  SquareTerminal, StickyNote, CloudSun, FileText, Workflow,
 } from 'lucide-react'
 import type { AppProps } from '../types'
 import { useNotes } from '../store/notesStore'
@@ -53,6 +53,15 @@ export const CATALOG: AppManifest[] = [
     icon: Package, sizeKB: 300, permissions: [],
     launch: { defaultSize: { w: 900, h: 600 }, singleton: true },
     load: () => named(import('../apps/appstore/AppStore'), 'AppStore'),
+  },
+
+  {
+    id: 'automations', name: 'Automations', kind: 'system', category: 'System', version: '1.0.0', developer: 'THRENos',
+    description: 'Build and run automated workflows',
+    about: 'Create workflows from triggers, conditions and actions that operate inside THRENos. Nothing here can reach your computer.',
+    icon: Workflow, sizeKB: 420, permissions: ['filesystem', 'notifications'],
+    launch: { defaultSize: { w: 1020, h: 640 }, singleton: true },
+    load: () => named(import('../apps/automations/Automations'), 'Automations'),
   },
 
   // ---- Bundled: preinstalled, removable ----

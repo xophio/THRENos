@@ -5,16 +5,19 @@ import './styles/index.css'
 import App from './App'
 import { bootOS } from './os/boot'
 import './store/windowSession' // starts saving the window layout while a session is running
+import { startAutomationEngine } from './automation/events'
 
 bootOS()
+startAutomationEngine()
 
 // Development-only handle for inspecting the app ecosystem from the browser console and tests.
 if (import.meta.env.DEV) {
   void Promise.all([
     import('./os/installer'), import('./os/permissions'), import('./os/registry'), import('./os/appData'),
     import('./store/workspaceStore'), import('./store/windowStore'), import('./system/systemStore'), import('./system/auth'), import('./system/authStore'),
-  ]).then(([installer, permissions, registry, appData, workspaces, windows, system, auth, authStore]) => {
-    Object.assign(window, { __threnos: { ...installer, ...permissions, ...registry, ...appData, ...workspaces, ...windows, ...system, ...auth, ...authStore } })
+    import('./automation/store'), import('./automation/engine'), import('./automation/model'), import('./automation/templates'),
+  ]).then(([installer, permissions, registry, appData, workspaces, windows, system, auth, authStore, autoStore, autoEngine, autoModel, autoTemplates]) => {
+    Object.assign(window, { __threnos: { ...installer, ...permissions, ...registry, ...appData, ...workspaces, ...windows, ...system, ...auth, ...authStore, ...autoStore, ...autoEngine, ...autoModel, ...autoTemplates } })
   })
 }
 

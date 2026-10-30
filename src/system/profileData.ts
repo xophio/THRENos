@@ -7,6 +7,7 @@ import { useWorkspaces } from '../store/workspaceStore'
 import { eraseProfileSettings, loadProfileSettings } from '../store/settingsStore'
 import type { SettingsValues } from '../store/settingsStore'
 import { useAppDataStore } from '../os/appData'
+import { useAutomations } from '../automation/store'
 import { scopedKey } from './activeProfile'
 
 /**
@@ -33,6 +34,7 @@ const SCOPED: Scoped[] = [
   scoped('threnos-wallpapers', useCustomWallpapers),
   scoped('threnos-appdata', useAppDataStore),
   scoped('threnos-workspaces', useWorkspaces),
+  scoped('threnos-automations', useAutomations),
 ]
 
 /** The per-profile records besides the stores above (window layout is handled by windowSession). */

@@ -31,6 +31,8 @@ export interface AppFs {
   read: (path: string) => string | null
   write: (path: string, content: string) => string | null
   mkdir: (path: string) => string | null
+  rename: (from: string, to: string) => string | null
+  copy: (from: string, to: string) => string | null
   exists: (path: string) => boolean
 }
 
@@ -47,6 +49,8 @@ function createFs(appId: string): AppFs {
     read: (path) => (guard(path) ? null : useFs.getState().read(path)),
     write: (path, content) => guard(path) ?? useFs.getState().write(path, content),
     mkdir: (path) => guard(path) ?? useFs.getState().mkdir(path),
+    rename: (from, to) => guard(from) ?? guard(to) ?? useFs.getState().rename(from, to),
+    copy: (from, to) => guard(from) ?? guard(to) ?? useFs.getState().copy(from, to),
     exists: (path) => !guard(path) && useFs.getState().exists(path),
   }
 }
